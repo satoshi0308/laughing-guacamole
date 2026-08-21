@@ -51,4 +51,10 @@ CF_ACCESS_ALLOWED_EMAILS=本人のメールアドレス
 
 ## Render Freeへの配置
 
-リポジトリ直下の`render.yaml`をBlueprintとして読み込むと、Node.js Web Service、ビルド、起動、ヘルスチェックが設定されます。作成時にCloudflare AccessのTeam domain、AUD、許可メールアドレスをRenderの環境変数へ入力してください。
+リポジトリ直下の`render.yaml`をBlueprintとして読み込むと、Node.js Web Service、ビルド、起動、ヘルスチェックが設定されます。作成時に16文字以上の専用パスワードをRenderの環境変数へ入力してください。
+
+```env
+APP_BASIC_AUTH_ENABLED=true
+APP_BASIC_AUTH_USERNAME=seo-pulse
+APP_BASIC_AUTH_PASSWORD=16文字以上の専用パスワード
+```
