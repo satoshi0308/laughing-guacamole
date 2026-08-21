@@ -6,6 +6,7 @@ import { safeFetchText, FetchError } from "./fetch-page.js";
 import { getSources } from "./sources.js";
 import { TargetUrlError } from "./security.js";
 import { createCloudflareAccessMiddleware } from "./access-auth.js";
+import { createBasicAuthMiddleware } from "./basic-auth.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(__dirname, "..");
@@ -17,6 +18,7 @@ const maxConcurrentAudits = Number(process.env.AUDIT_MAX_CONCURRENT || 4);
 const auditRateLimit = Number(process.env.AUDIT_RATE_LIMIT || 30);
 const auditRateWindowMs = Number(process.env.AUDIT_RATE_WINDOW_MS || 60_000);
 const cloudflareAccess = createCloudflareAccessMiddleware();
+const basicAuth = createBasicAuthMiddleware();
 const app = express();
 const auditWindows = new Map();
 let activeAudits = 0;
@@ -35,6 +37,7 @@ app.get("/api/health", (req, res) => {
 });
 
 app.use(cloudflareAccess);
+app.use(basicAuth);
 app.use(express.json({ limit: "12kb" }));
 
 app.get("/api/sources", (req, res) => {
@@ -43,7 +46,7 @@ app.get("/api/sources", (req, res) => {
 
 function admitAudit(req, res, next) {
   const now = Date.now();
-  const client = req.accessUser?.email || req.socket.remoteAddress || "unknown";
+  const client = req.accessUser?.email || req.basicAuthUser || req.socket.remoteAddress || "unknown";
   const current = auditWindows.get(client);
   const window = !current || current.resetAt <= now ? { count: 0, resetAt: now + auditRateWindowMs } : current;
 
