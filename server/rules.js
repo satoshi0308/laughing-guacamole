@@ -1,6 +1,7 @@
 import * as cheerio from "cheerio";
 import { getSources } from "./sources.js";
 import { calculateCoreScore, CORE_WEIGHTS } from "../shared/scoring.js";
+import { analyzeSearchInsights } from "./search-insights.js";
 
 const CATEGORY_LABELS = {
   search: "検索表示",
@@ -151,6 +152,7 @@ function finalizeReport(page, issues, facts, extraLimitations = []) {
     issues,
     sources: getSources(usedSourceIds),
     facts,
+    searchInsights: page.status === 200 ? analyzeSearchInsights(page.text) : null,
     limitations: [
       ...extraLimitations,
       "公開中の生HTMLを1ページだけ診断しています。JavaScript実行後のDOMは対象外です。",
