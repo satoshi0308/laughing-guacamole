@@ -123,6 +123,19 @@ export const demoReport = {
     "公開中の生HTMLを1ページだけ診断しています。JavaScript実行後のDOMは対象外です。",
     "スコアはSEO PULSE独自の優先度指標で、Googleの公式評価ではありません。",
   ],
+  searchInsights: {
+    confidence: "high",
+    services: ["Webサイト制作", "SEO対策", "Webマーケティング"],
+    targets: ["企業・事業者の担当者", "中小企業・成長企業"],
+    problems: ["集客・認知を増やしたい", "売上・問い合わせを増やしたい", "検索で見つかりやすくしたい"],
+    explicitKeywords: ["Webサイト制作", "SEO対策", "マーケティング支援", "集客", "問い合わせ"],
+    latentKeywords: ["ホームページ制作 会社", "SEO コンサルティング", "Web集客 支援"],
+    intents: [
+      { type: "比較・検討", reason: "支援内容や実績を確認し、依頼先を検討する意図" },
+      { type: "行動・取引", reason: "問い合わせや相談へ進む意図" },
+    ],
+    note: "公開HTMLのtitle・description・見出し・本文から自動推定しています。実際の顧客調査や検索ボリュームではありません。",
+  },
   issues: [
     {
       ...base,
