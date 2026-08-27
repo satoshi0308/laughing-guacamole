@@ -27,3 +27,12 @@ test("returns a low-confidence empty result when public HTML has little informat
   assert.deepEqual(result.services, []);
   assert.match(result.note, /推定できません/);
 });
+
+test("uses an explicit inference label when a business page does not state its audience", () => {
+  const result = analyzeSearchInsights(`<!doctype html><html><head><title>AI導入支援</title>
+    <meta name="description" content="AIを活用して業務効率化を支援します。"></head>
+    <body><h1>AIツール開発と導入支援</h1><h2>企業の業務を自動化</h2></body></html>`);
+  assert.deepEqual(result.targets, ["業務課題を解決したい企業・担当者（推定）"]);
+  assert.ok(!result.services.includes("サービス"));
+  assert.ok(!result.explicitKeywords.includes("する"));
+});
