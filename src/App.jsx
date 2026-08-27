@@ -6,6 +6,7 @@ import { Icon } from "./components/Icons";
 import { IssueDetail } from "./components/IssueDetail";
 import { IssueTable } from "./components/IssueTable";
 import { ScoreSummary } from "./components/ScoreSummary";
+import { SearchInsights } from "./components/SearchInsights";
 import { SourceLibrary } from "./components/SourceLibrary";
 import { demoReport } from "./data/demoReport";
 
@@ -186,6 +187,7 @@ export default function App() {
 
               <ScoreSummary report={report} />
               <CmsSummary cms={report.facts?.cms} />
+              <SearchInsights insights={report.searchInsights} />
 
               <div className="report-workspace">
                 <IssueTable
