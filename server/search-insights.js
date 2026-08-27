@@ -4,13 +4,13 @@ const SERVICE_TERMS = [
   "SEO対策", "SEO診断", "SEOコンサルティング", "Webマーケティング", "デジタルマーケティング",
   "Webサイト制作", "ホームページ制作", "サイト制作", "ECサイト", "システム開発", "アプリ開発",
   "広告運用", "コンテンツ制作", "採用支援", "人材紹介", "業務効率化", "コンサルティング",
-  "オンラインショップ", "通販", "予約", "スクール", "講座", "サービス", "製品",
+  "オンラインショップ", "通販", "予約", "スクール", "講座",
 ];
 
 const STOP_WORDS = new Set([
   "こと", "もの", "ため", "よう", "こちら", "サイト", "ページ", "サービス", "株式会社", "合同会社",
   "お客様", "ください", "について", "による", "できる", "します", "いる", "ある", "から", "まで",
-  "with", "this", "that", "your", "the", "and", "for", "です", "ます",
+  "with", "this", "that", "your", "the", "and", "for", "です", "ます", "する",
 ]);
 
 const TARGET_PATTERNS = [
@@ -115,7 +115,17 @@ export function analyzeSearchInsights(html) {
     .filter((part) => part.length >= 4 && part.length <= 54 && /支援|制作|開発|対策|運用|診断|コンサル|販売|予約|スクール|サービス|製品/.test(part));
   const services = unique([...serviceMatches, ...headingPhrases, ...titlePhrases], 5);
 
-  const targets = unique(TARGET_PATTERNS.filter(([pattern]) => pattern.test(context)).map(([, label]) => label), 4);
+  const detectedTargets = TARGET_PATTERNS.filter(([pattern]) => pattern.test(context)).map(([, label]) => label);
+  const targets = unique(
+    detectedTargets.length
+      ? detectedTargets
+      : /企業|法人|業務|導入|担当|BtoB|ビジネス/i.test(context)
+        ? ["業務課題を解決したい企業・担当者（推定）"]
+        : services.length
+          ? ["掲載サービスを検討している人（推定）"]
+          : [],
+    4
+  );
   const problems = unique(PROBLEM_PATTERNS.filter(([pattern]) => pattern.test(context)).map(([, label]) => label), 5);
 
   const weightedParts = [
