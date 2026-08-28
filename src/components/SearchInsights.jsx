@@ -13,7 +13,7 @@ function InsightList({ title, items, empty = "判断材料が不足していま�
 
 export function SearchInsights({ insights }) {
   if (!insights) return null;
-  const isAi = insights.method === "ai";
+  const isLocal = insights.method === "local";
   return (
     <section className="search-insights" aria-labelledby="search-insights-title">
       <header>
@@ -22,7 +22,7 @@ export function SearchInsights({ insights }) {
           <h2 id="search-insights-title">このページが応えるニーズ</h2>
         </div>
         <div className="insight-badges">
-          <strong className={`insight-method ${isAi ? "ai" : "heuristic"}`}>{isAi ? "AI意味解析" : "簡易推定"}</strong>
+          <strong className={`insight-method ${isLocal ? "local" : "heuristic"}`}>{isLocal ? "無料・本文構造解析" : "簡易推定"}</strong>
           <strong className={`insight-confidence ${insights.confidence || "low"}`}>
             推定確度: {confidenceLabels[insights.confidence] || "低"}
           </strong>
