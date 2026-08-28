@@ -124,7 +124,7 @@ export const demoReport = {
     "スコアはSEO PULSE独自の優先度指標で、Googleの公式評価ではありません。",
   ],
   searchInsights: {
-    method: "ai",
+    method: "local",
     confidence: "high",
     pageType: "BtoBサービス紹介ページ",
     summary: "中小企業のWeb集客課題に対して、サイト制作・SEO・マーケティング支援を一体で提供するページです。",
@@ -142,7 +142,7 @@ export const demoReport = {
       { claim: "成果獲得が主目的", source: "集客できるWebサイト制作とSEO対策" },
     ],
     caveats: [],
-    note: "AI意味解析の表示例です。実際の診断では公開HTMLの主要本文を解析します。検索ボリュームや実際の顧客調査ではありません。",
+    note: "外部AIへ送信せず、公開HTMLの見出し階層・主要本文・CTAの関係から無料で推定しています。検索ボリュームや実際の顧客調査ではありません。",
   },
   issues: [
     {
