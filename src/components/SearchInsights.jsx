@@ -1,6 +1,6 @@
 const confidenceLabels = { high: "高", medium: "中", low: "低" };
 
-function InsightList({ title, items, empty = "推定材料が不足しています" }) {
+function InsightList({ title, items, empty = "判断材料が不足しています" }) {
   return (
     <div className="insight-group">
       <h3>{title}</h3>
@@ -13,6 +13,7 @@ function InsightList({ title, items, empty = "推定材料が不足していま�
 
 export function SearchInsights({ insights }) {
   if (!insights) return null;
+  const isAi = insights.method === "ai";
   return (
     <section className="search-insights" aria-labelledby="search-insights-title">
       <header>
@@ -20,10 +21,19 @@ export function SearchInsights({ insights }) {
           <span>顧客・検索ニーズ分析</span>
           <h2 id="search-insights-title">このページが応えるニーズ</h2>
         </div>
-        <strong className={`insight-confidence ${insights.confidence || "low"}`}>
-          推定確度: {confidenceLabels[insights.confidence] || "低"}
-        </strong>
+        <div className="insight-badges">
+          <strong className={`insight-method ${isAi ? "ai" : "heuristic"}`}>{isAi ? "AI意味解析" : "簡易推定"}</strong>
+          <strong className={`insight-confidence ${insights.confidence || "low"}`}>
+            推定確度: {confidenceLabels[insights.confidence] || "低"}
+          </strong>
+        </div>
       </header>
+      {insights.summary ? (
+        <div className="insight-overview">
+          <span>{insights.pageType || "ページ概要"}</span>
+          <p>{insights.summary}</p>
+        </div>
+      ) : null}
       <div className="insight-grid">
         <InsightList title="取り扱うサービス" items={insights.services} />
         <InsightList title="想定ターゲット" items={insights.targets} />
@@ -36,9 +46,18 @@ export function SearchInsights({ insights }) {
             <dl>{insights.intents.map((intent) => (
               <div key={intent.type}><dt>{intent.type}</dt><dd>{intent.reason}</dd></div>
             ))}</dl>
-          ) : <p>推定材料が不足しています</p>}
+          ) : <p>判断材料が不足しています</p>}
         </div>
       </div>
+      {insights.evidence?.length ? (
+        <div className="insight-evidence">
+          <h3>判断根拠</h3>
+          <dl>{insights.evidence.map((item, index) => (
+            <div key={`${item.claim}-${index}`}><dt>{item.claim}</dt><dd>「{item.source}」</dd></div>
+          ))}</dl>
+        </div>
+      ) : null}
+      {insights.caveats?.length ? <p className="insight-caveats">要確認: {insights.caveats.join(" / ")}</p> : null}
       <p className="insight-note">{insights.note}</p>
     </section>
   );
