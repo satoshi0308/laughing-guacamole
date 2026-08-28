@@ -101,7 +101,7 @@ export function analyzeSearchInsights(html) {
 
   if (context.length < 40) {
     return {
-      confidence: "low",
+      method: "heuristic", confidence: "low",
       services: [], targets: [], problems: [], explicitKeywords: [], latentKeywords: [], intents: [],
       note: "公開HTMLの情報が少ないため、推定できませんでした。",
     };
@@ -143,13 +143,14 @@ export function analyzeSearchInsights(html) {
   const evidenceCount = [title, description, h1.length ? "h1" : "", headings.length ? "heading" : ""].filter(Boolean).length;
 
   return {
-    confidence: evidenceCount >= 4 && (services.length + targets.length + problems.length) >= 5 ? "high" : evidenceCount >= 2 ? "medium" : "low",
+    method: "heuristic",
+    confidence: evidenceCount >= 2 ? "medium" : "low",
     services,
     targets,
     problems,
     explicitKeywords,
     latentKeywords,
     intents: inferSearchIntent(context),
-    note: "公開HTMLのtitle・description・見出し・本文から自動推定しています。実際の顧客調査や検索ボリュームではありません。",
+    note: "AI解析が未設定または完了しなかったため、語句一致による簡易推定を表示しています。実際の顧客調査や検索ボリュームではありません。",
   };
 }

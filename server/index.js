@@ -7,13 +7,14 @@ import { getSources } from "./sources.js";
 import { TargetUrlError } from "./security.js";
 import { createCloudflareAccessMiddleware } from "./access-auth.js";
 import { createBasicAuthMiddleware } from "./basic-auth.js";
+import { analyzeSemanticInsights, semanticInsightConfig } from "./semantic-insights.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(__dirname, "..");
 const dist = path.join(root, "dist");
 const host = process.env.HOST || "127.0.0.1";
 const port = Number(process.env.PORT || 8787);
-const auditDeadlineMs = Number(process.env.AUDIT_TOTAL_TIMEOUT_MS || 18_000);
+const auditDeadlineMs = Number(process.env.AUDIT_TOTAL_TIMEOUT_MS || 35_000);
 const maxConcurrentAudits = Number(process.env.AUDIT_MAX_CONCURRENT || 4);
 const auditRateLimit = Number(process.env.AUDIT_RATE_LIMIT || 30);
 const auditRateWindowMs = Number(process.env.AUDIT_RATE_WINDOW_MS || 60_000);
@@ -33,7 +34,7 @@ app.use((req, res, next) => {
 });
 
 app.get("/api/health", (req, res) => {
-  res.json({ ok: true, service: "SEO PULSE", version: "1.0.0" });
+  res.json({ ok: true, service: "SEO PULSE", version: "1.1.0", semanticInsights: semanticInsightConfig.enabled });
 });
 
 app.use(cloudflareAccess);
@@ -117,7 +118,15 @@ app.post("/api/audit", admitAudit, async (req, res, next) => {
       }
     }
 
-    res.json({ report: auditPage(page, robotsResult) });
+    const report = auditPage(page, robotsResult);
+    if (page.status === 200) {
+      try {
+        report.searchInsights = await analyzeSemanticInsights(page.text, { deadline }) || report.searchInsights;
+      } catch (error) {
+        console.warn("Semantic insights fallback:", error?.message || "unknown error");
+      }
+    }
+    res.json({ report });
   } catch (error) {
     next(error);
   } finally {
