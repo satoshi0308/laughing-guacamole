@@ -27,7 +27,7 @@ npm start
 - viewport、画像alt、クロール可能なリンク、アンカーテキスト
 - JSON-LDの構文、hreflang、HTMLの言語指定
 - WordPress、Shopify、Wix、Squarespace、Webflow、Drupal、Joomla!、Ghost、HubSpot CMSの公開シグネチャ
-- ページの事業内容、対象顧客、解決課題、顕在・潜在ニーズ、検索意図（OpenAI API設定時）
+- ページの事業内容、対象顧客、解決課題、顕在・潜在ニーズ、検索意図（外部AI不使用）
 
 スコアは固定されたコア項目だけで計算し、判定不能項目は判定率を併記して除外します。canonical・構造化データ・hreflangなど任意機能の有無では加点しません。各判定は「Google要件」「Google推奨」「業界推奨」「要確認」を区別して表示します。
 
@@ -58,13 +58,4 @@ CF_ACCESS_ALLOWED_EMAILS=本人のメールアドレス
 APP_BASIC_AUTH_ENABLED=true
 APP_BASIC_AUTH_USERNAME=seo-pulse
 APP_BASIC_AUTH_PASSWORD=16文字以上の専用パスワード
-```
-
-### ページ内容のAI意味解析
-
-RenderのEnvironmentへAPIキーをSecretとして設定します。キーはブラウザへ送信せず、サーバーからResponses APIだけに送信します。未設定・タイムアウト時は語句一致による簡易推定へ切り替わります。
-
-```env
-OPENAI_API_KEY=OpenAIのProject API key
-OPENAI_INSIGHTS_MODEL=gpt-5.4-mini
 ```
