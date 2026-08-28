@@ -18,7 +18,8 @@ test("extracts audience, needs, keywords, and intent from a Japanese service pag
   assert.ok(result.explicitKeywords.includes("SEO対策"));
   assert.ok(result.latentKeywords.includes("SEO コンサルティング"));
   assert.deepEqual(result.intents.map(({ type }) => type), ["比較・検討", "行動・取引"]);
-  assert.equal(result.confidence, "high");
+  assert.equal(result.confidence, "medium");
+  assert.equal(result.method, "heuristic");
 });
 
 test("returns a low-confidence empty result when public HTML has little information", () => {
